@@ -1,0 +1,20 @@
+{
+  "domain": "scootscoot",
+  "name": "ScootScoot",
+  "bluetooth": [
+    {
+      "local_name": "03G*",
+      "connectable": true
+    }
+  ],
+  "codeowners": ["@andyshinn"],
+  "config_flow": true,
+  "dependencies": ["bluetooth_adapters"],
+  "documentation": "https://github.com/andyshinn/scootscoot-ha",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/andyshinn/scootscoot-ha/issues",
+  "loggers": ["scootscoot"],
+  "requirements": ["scootscoot==0.1.1"],
+  "version": "0.1.0"
+}

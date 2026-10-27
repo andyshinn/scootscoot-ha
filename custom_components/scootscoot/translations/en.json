@@ -1,0 +1,162 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "description": "Pick your scooter. It advertises its serial number as its Bluetooth name.",
+        "data": {
+          "address": "Device"
+        }
+      },
+      "credentials": {
+        "description": "Enter the Bluetooth password for {name}. This is the 16-byte password the Segway app negotiated when it paired; this integration never pairs on its own, because a paired scooter ignores attempts to set a new password.",
+        "data": {
+          "profile": "Model",
+          "password": "Password"
+        },
+        "data_description": {
+          "password": "32 hexadecimal characters, or 24 characters of base64."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-enter password",
+        "description": "{name} rejected the stored password. If the scooter was reset and paired with the Segway app again, extract the new password and enter it here.",
+        "data": {
+          "password": "Password"
+        },
+        "data_description": {
+          "password": "32 hexadecimal characters, or 24 characters of base64."
+        }
+      }
+    },
+    "error": {
+      "invalid_password_format": "That is not a 16-byte password. Enter 32 hexadecimal characters or 24 characters of base64.",
+      "invalid_auth": "The scooter rejected this password.",
+      "not_paired": "The scooter has no password set. Pair it with the Segway app first, then extract the password the app stored.",
+      "busy": "The scooter is connected to something else, most likely the Segway app. Close the app and try again.",
+      "not_in_range": "No Bluetooth adapter or proxy can currently connect to the scooter. Move a proxy closer, or wake the scooter, and try again.",
+      "cannot_connect": "Could not connect to the scooter.",
+      "unknown": "Unexpected error."
+    },
+    "abort": {
+      "already_configured": "This scooter is already configured.",
+      "already_in_progress": "Setup for this scooter is already in progress.",
+      "no_devices_found": "No connectable Bluetooth devices were found.",
+      "reauth_successful": "The password was updated."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "slow_interval": "Poll interval while parked",
+          "fast_interval": "Poll interval while charging or switched on",
+          "stale_after": "Mark readings unavailable after"
+        },
+        "data_description": {
+          "slow_interval": "Each poll briefly takes the scooter's only Bluetooth connection, so the Segway app may see it as busy for a few seconds.",
+          "fast_interval": "Used while the battery is charging or the scooter is switched on.",
+          "stale_after": "Readings are kept through failed polls, such as while you are out riding. After this long without a fresh reading they become unavailable. 0 keeps them indefinitely."
+        }
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "powered_on": {
+        "name": "Powered on"
+      },
+      "fault": {
+        "name": "Fault"
+      },
+      "connection": {
+        "name": "Connection"
+      }
+    },
+    "sensor": {
+      "battery_voltage": {
+        "name": "Battery voltage"
+      },
+      "battery_current": {
+        "name": "Battery current"
+      },
+      "battery_power": {
+        "name": "Battery power"
+      },
+      "remaining_capacity": {
+        "name": "Remaining capacity"
+      },
+      "full_capacity": {
+        "name": "Full charge capacity"
+      },
+      "charge_cycles": {
+        "name": "Charge cycles"
+      },
+      "time_to_full": {
+        "name": "Time to full"
+      },
+      "charge_status": {
+        "name": "Charge status code"
+      },
+      "battery_temperature_max": {
+        "name": "Battery temperature max"
+      },
+      "battery_temperature_min": {
+        "name": "Battery temperature min"
+      },
+      "battery_temperature": {
+        "name": "Battery temperature {index}"
+      },
+      "cell_voltage_max": {
+        "name": "Cell voltage max"
+      },
+      "cell_voltage_min": {
+        "name": "Cell voltage min"
+      },
+      "cell_voltage_delta": {
+        "name": "Cell voltage delta"
+      },
+      "cell_voltage": {
+        "name": "Cell {index} voltage"
+      },
+      "odometer": {
+        "name": "Odometer"
+      },
+      "range": {
+        "name": "Estimated range"
+      },
+      "displayed_battery": {
+        "name": "Dashboard battery"
+      },
+      "body_temperature": {
+        "name": "Body temperature"
+      },
+      "motor_temperature": {
+        "name": "Motor controller temperature"
+      },
+      "error_code": {
+        "name": "Error code"
+      },
+      "warning_code": {
+        "name": "Warning code"
+      },
+      "last_seen": {
+        "name": "Last seen"
+      }
+    }
+  },
+  "exceptions": {
+    "not_in_range": {
+      "message": "The scooter is not in range of any Bluetooth adapter or proxy."
+    },
+    "busy": {
+      "message": "The scooter is connected to something else, most likely the Segway app."
+    },
+    "auth_failed": {
+      "message": "The scooter rejected the stored password."
+    },
+    "poll_failed": {
+      "message": "Could not read the scooter: {error}"
+    }
+  }
+}
