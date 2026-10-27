@@ -7,7 +7,6 @@
       "connectable": true
     }
   ],
-  "categories": ["vehicles_transport.bikes_scooters"],
   "codeowners": ["@andyshinn"],
   "config_flow": true,
   "dependencies": ["bluetooth_adapters"],
