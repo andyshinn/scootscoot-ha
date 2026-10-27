@@ -51,7 +51,7 @@ from .const import (
     STORAGE_SAVE_DELAY,
     STORAGE_VERSION,
 )
-from .data import Snapshot, dump, load, merge, needs_identity
+from .data import Snapshot, dump, is_powered_on, load, merge, needs_identity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -192,9 +192,8 @@ class ScootScootCoordinator(DataUpdateCoordinator[Snapshot]):
                 cells = _as_floats(await _read(session, "rBmsCellVolFrequence"))
                 time_to_full = _as_int(await _read(session, "rTimeFull"))
 
-            powered_on = BoardRole.VCU in state.responding
             info = None
-            if needs_identity(previous, now=now, powered_on=powered_on):
+            if needs_identity(previous, now=now, powered_on=is_powered_on(state)):
                 info = await session.identify()
 
         return merge(
