@@ -23,9 +23,10 @@ _LOGGER = logging.getLogger(__name__)
 class Snapshot:
     """The latest reading of each board, each stamped with when it was taken.
 
-    A group is replaced only when its board answers. A parked scooter's VCU and
-    MCU are asleep, so their last ride telemetry is kept rather than blanked;
-    the timestamps let entities decide when a value is too old to show.
+    A group is replaced only when its board answers. A parked scooter's MCU is
+    asleep, so its last reading is kept rather than blanked, as is anything
+    else a board fails to return; the timestamps let entities decide when a
+    value is too old to show.
     """
 
     battery: BatteryState | None = None
@@ -40,8 +41,8 @@ class Snapshot:
     info_at: datetime | None = None
     #: Last successful connection, whichever boards answered.
     seen_at: datetime | None = None
-    #: Whether the VCU answered on the latest successful poll -- i.e. the
-    #: scooter is switched on.
+    #: Whether the MCU answered on the latest successful poll -- i.e. the
+    #: scooter is switched on. The VCU is no use here: it answers when off.
     powered_on: bool = False
 
     @property
@@ -65,7 +66,7 @@ def merge(
     snapshot = replace(
         previous,
         seen_at=now,
-        powered_on=BoardRole.VCU in state.responding,
+        powered_on=is_powered_on(state),
     )
     if state.battery is not None:
         snapshot = replace(
@@ -84,11 +85,16 @@ def merge(
     return snapshot
 
 
+def is_powered_on(state: ScooterState) -> bool:
+    """Whether the scooter is switched on: its motor controller only answers then."""
+    return BoardRole.MCU in state.responding
+
+
 def merge_info(previous: DeviceInfo | None, current: DeviceInfo) -> DeviceInfo:
     """Overlay a fresh identity read on the last one, field by field.
 
     identify() returns None for every field held by a sleeping board, so a read
-    from a parked scooter must not erase firmware versions learned earlier.
+    from a parked scooter must not erase the motor part number learned earlier.
     """
     if previous is None or previous.serial != current.serial:
         return current
@@ -103,14 +109,16 @@ def merge_info(previous: DeviceInfo | None, current: DeviceInfo) -> DeviceInfo:
 def needs_identity(snapshot: Snapshot, *, now: datetime, powered_on: bool) -> bool:
     """Whether this poll should also read identity.
 
-    Most identity registers live on the VCU, which only answers while the
-    scooter is on, so beyond the very first read this waits for it to wake.
+    Most identity registers live on the VCU, which answers even with the
+    scooter off, so the first read learns nearly everything. Only the motor
+    controller's part number waits for the scooter to be switched on.
     """
-    if snapshot.info is None or snapshot.info_at is None:
+    info = snapshot.info
+    if info is None or snapshot.info_at is None or info.vcu_firmware is None:
         return True
-    if not powered_on:
-        return False
-    return snapshot.info.vcu_firmware is None or now - snapshot.info_at >= IDENTIFY_INTERVAL
+    if now - snapshot.info_at >= IDENTIFY_INTERVAL:
+        return True
+    return powered_on and info.motor_part_number is None
 
 
 # --- persistence -------------------------------------------------------------

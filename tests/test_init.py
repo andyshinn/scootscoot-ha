@@ -70,8 +70,8 @@ async def test_parked_scooter(hass: HomeAssistant, config_entry: MockConfigEntry
     assert state(hass, CHARGING) == STATE_OFF
     assert state(hass, POWERED) == STATE_OFF
     assert state(hass, CONNECTION) == STATE_ON
-    # The VCU has never answered, so there is nothing to show yet.
-    assert state(hass, ODOMETER) == STATE_UNAVAILABLE
+    # The VCU answers while parked, so ride data is current from the start.
+    assert state(hass, ODOMETER) == "1234.5"
     assert coordinator.update_interval == timedelta(minutes=15)
 
 

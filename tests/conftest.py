@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import time
 from collections.abc import Generator
+from dataclasses import replace
 from datetime import date
 from typing import Any
 from unittest.mock import AsyncMock, MagicMock, patch
@@ -51,10 +52,20 @@ VEHICLE = VehicleState(
 MOTOR = MotorState(body_temp_c=26.0)
 CELLS = tuple(3.726 + i * 0.001 for i in range(20))
 
+# Measured on a switched-off GT3: the VCU still answers in full; only the MCU
+# is silent.
 PARKED = ScooterState(
     serial=SERIAL,
     profile_key="gt3_pro",
-    responding=frozenset({BoardRole.BMS1, BoardRole.BLE}),
+    responding=frozenset({BoardRole.BMS1, BoardRole.VCU}),
+    battery=BATTERY,
+    vehicle=VEHICLE,
+)
+#: Only the battery answered: a VCU read that failed even after its retry.
+BATTERY_ONLY = ScooterState(
+    serial=SERIAL,
+    profile_key="gt3_pro",
+    responding=frozenset({BoardRole.BMS1}),
     battery=BATTERY,
 )
 POWERED_ON = ScooterState(
@@ -65,7 +76,6 @@ POWERED_ON = ScooterState(
     vehicle=VEHICLE,
     motor=MOTOR,
 )
-INFO_PARKED = DeviceInfo(serial=SERIAL, ble_firmware="0.2.8")
 INFO_FULL = DeviceInfo(
     serial=SERIAL,
     part_number="AA.00.0000.00",
@@ -76,6 +86,8 @@ INFO_FULL = DeviceInfo(
     activated_on=date(2025, 6, 1),
     motor_part_number="BB.00.0000.00",
 )
+#: Everything but the motor part number, which lives on the sleeping MCU.
+INFO_PARKED = replace(INFO_FULL, motor_part_number=None)
 
 
 def service_info(name: str = SERIAL, address: str = ADDRESS) -> BluetoothServiceInfoBleak:

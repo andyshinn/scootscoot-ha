@@ -46,9 +46,11 @@ changes. Home Assistant will prompt you to re-enter it.
 
 ## What you get
 
-On a parked scooter only the battery management system and the Bluetooth radio
-are awake, so battery data stays current while ride data (odometer, range,
-temperatures, error codes) is the last value read while the scooter was on.
+A parked scooter still answers from its battery management system and its
+vehicle control unit, so battery and ride data (odometer, range, error codes)
+stay current. Only the motor controller sleeps, which is how **Powered on**
+tells the two apart; motor temperature is the last value read while the
+scooter was on.
 
 | Entity | Notes |
 |---|---|

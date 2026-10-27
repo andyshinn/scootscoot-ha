@@ -21,9 +21,10 @@ DEFAULT_FAST_INTERVAL: Final = 2
 #: Hours after which a reading is too old to show. 0 keeps it forever.
 DEFAULT_STALE_AFTER: Final = 24
 
-#: The library's worst case is a little over two minutes before it gives up on
-#: a busy vehicle; this is a backstop against a proxy that never answers.
-POLL_TIMEOUT: Final = 180
+#: The library's worst case is around three and a half minutes: a busy vehicle
+#: that connects on its last attempt and then goes silent mid-poll. This is a
+#: backstop against a proxy that never answers.
+POLL_TIMEOUT: Final = 240
 
 #: Identity is static, but firmware updates do happen.
 IDENTIFY_INTERVAL: Final = timedelta(hours=24)
