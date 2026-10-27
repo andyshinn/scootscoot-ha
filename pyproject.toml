@@ -1,0 +1,36 @@
+[project]
+name = "scootscoot-ha"
+description = "Home Assistant integration for Segway-Ninebot scooters over BLE"
+version = "0.1.0"
+requires-python = ">=3.14.2"
+license = "MIT"
+# Runtime requirements live in custom_components/scootscoot/manifest.json;
+# Home Assistant installs those itself. This file only drives local tooling.
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest-homeassistant-custom-component==0.13.375",
+    "scootscoot==0.1.1",
+    # Requirements of the core usb component, which bluetooth depends on and
+    # the test harness does not install.
+    "aiousbwatcher==1.1.2",
+    "serialx==1.11.0",
+    "ruff>=0.6",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "A", "C4", "RUF", "ASYNC"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = "-q"

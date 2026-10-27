@@ -1,0 +1,44 @@
+{
+  "entity": {
+    "sensor": {
+      "remaining_capacity": {
+        "default": "mdi:battery-outline"
+      },
+      "full_capacity": {
+        "default": "mdi:battery-heart-variant"
+      },
+      "charge_cycles": {
+        "default": "mdi:battery-sync"
+      },
+      "time_to_full": {
+        "default": "mdi:battery-clock"
+      },
+      "charge_status": {
+        "default": "mdi:battery-unknown"
+      },
+      "odometer": {
+        "default": "mdi:counter"
+      },
+      "range": {
+        "default": "mdi:map-marker-distance"
+      },
+      "displayed_battery": {
+        "default": "mdi:gauge"
+      },
+      "error_code": {
+        "default": "mdi:alert-circle-outline"
+      },
+      "warning_code": {
+        "default": "mdi:alert-outline"
+      },
+      "last_seen": {
+        "default": "mdi:bluetooth-connect"
+      }
+    },
+    "binary_sensor": {
+      "powered_on": {
+        "default": "mdi:scooter-electric"
+      }
+    }
+  }
+}
